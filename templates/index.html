@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Study Companion</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>AI Study Companion 🤖</h1>
+
+<input id="input" placeholder="Enter topic or question">
+<button onclick="askAI()">Ask</button>
+<button onclick="getNotes()">Notes</button>
+<button onclick="getQuiz()">Quiz</button>
+
+<br><br>
+
+<input id="subjects" placeholder="Subjects (comma separated)">
+<input id="days" placeholder="Days">
+<button onclick="getPlan()">Study Plan</button>
+
+<pre id="output"></pre>
+
+<script>
+async function askAI() {
+    let msg = document.getElementById("input").value;
+    let res = await fetch("/ask", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message: msg})
+    });
+    let data = await res.json();
+    document.getElementById("output").innerText = data.reply;
+}
+
+async function getNotes() {
+    let topic = document.getElementById("input").value;
+    let res = await fetch("/notes", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({topic})
+    });
+    let data = await res.json();
+    document.getElementById("output").innerText = data.notes;
+}
+
+async function getQuiz() {
+    let topic = document.getElementById("input").value;
+    let res = await fetch("/quiz", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({topic})
+    });
+    let data = await res.json();
+    document.getElementById("output").innerText = data.quiz;
+}
+
+async function getPlan() {
+    let subjects = document.getElementById("subjects").value;
+    let days = document.getElementById("days").value;
+    let res = await fetch("/planner", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({subjects, days})
+    });
+    let data = await res.json();
+    document.getElementById("output").innerText = data.plan;
+}
+</script>
+
+</body>
+</html>
